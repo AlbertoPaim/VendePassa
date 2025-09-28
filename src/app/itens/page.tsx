@@ -16,7 +16,7 @@ export default async function ItensPage() {
                         {itens.filter(item => item.images.length > 0).map((item) => (
                             <li
                                 key={item.id}
-                                className="flex items-center gap-6 bg-[var(--color-button)] p-4 rounded-lg shadow-md border border-[var(--color-button-hover)] hover:bg-[var(--color-button-hover)] transition-colors"
+                                className="flex items-center gap-6 bg-card p-4 rounded-lg shadow-md border border-[var(--color-button-hover)] hover:bg-[var(--color-button-hover)] transition-colors"
                             >
                                 {item.images && item.images.length > 0 && (
                                     <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-md">

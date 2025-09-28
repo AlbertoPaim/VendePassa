@@ -5,19 +5,24 @@
 
 :root {
 
-  --title: #422a7a;
-  --secondaryText: #6943c0;
-  --button: #220f68;
-  --card: #dbdcff;
-  --highlight: #1d104d;
+
+  --background: #F2EDDD;
+  --title: #4A3F35;
+  --text-secondary: #5E4C3E;
+  --button: #6A4A5B;
+  --button-hover: #B37C71;
+  --destaque: #9DB5A4;
+  --card: #F8F6F2;
+  --input: #E8E5DA;
+  --border: #D1CFC7;
+
+  --link: #B37C71;
 
   --font-title: "Poppins", sans-serif;
   --font-body: "Inter", sans-serif;
 
   --radius: 0.625rem;
-  --background: #f3f3ff;
   --foreground: oklch(0.145 0 0);
-  --card: #dbdcff;
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
@@ -31,7 +36,6 @@
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -52,11 +56,11 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-title: var(--title);
-  --color-secondary: var(--secondaryText);
+  --color-text-secondary: var(--text-secondary);
   --color-button: var(--button);
   --color-button-hover: var(--button-hover);
   --color-button-text: var(--button-text);
-  --color-highlight: var(--highlight);
+  --color-destaque: var(--destaque);
 
   --font-sans: var(--font-body);
   --font-heading: var(--font-title);
@@ -146,6 +150,6 @@ body {
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-primary;
   }
 }

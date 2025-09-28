@@ -1,23 +1,14 @@
 import type { Metadata } from "next";
-import { Poppins, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "./context/AuthContext";
+import MenuDesktop from "@/components/ui/MenuDesktop";
 
-/* 🎨 Fontes */
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // pode ajustar conforme uso
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"], // ideal pro corpo
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Vende e Passa",
-  description: "Bazar online - todo tipo de itens, perto de você.",
+  title: "Meu Bazar",
+  description: "Sistema de login completo",
 };
 
 export default function RootLayout({
@@ -26,11 +17,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body
-        className={`${poppins.variable} ${inter.variable} antialiased`}
-      >
-        {children}
+    <html lang="pt-br">
+      <body className={`${inter.className} bg-background`}>
+        <AuthProvider>
+          <div className="flex">
+            <MenuDesktop />
+            <main className="flex-1">
+              {children}
+            </main>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
