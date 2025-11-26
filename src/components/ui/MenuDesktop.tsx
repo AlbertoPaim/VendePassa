@@ -14,9 +14,9 @@ export default function MenuDesktop() {
     const pathname = usePathname();
 
     return (
-        <aside className="fixed top-0 left-0 z-40 w-64 h-screen bg-card border-r border-input text-text flex flex-col">
+        <aside className="fixed top-0 left-0 z-40 w-64 h-screen bg-card border-r border-input text-text flex flex-col -translate-100">
             <div className="p-6 ">
-                <h2 className="text-2xl font-semibold text-title">Vende Passa</h2>
+                <h2 className="text-2xl font-semibold text-title">Vende e Passa</h2>
                 {isAuthenticated && (
                     <p className="text-sm text-title mt-2">Bem-vindo(a), {user?.email}</p>
                 )}
