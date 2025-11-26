@@ -3,6 +3,7 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import '@/config/axios'; // Importar configuração de axios
 
 interface User {
     id: string;
@@ -79,7 +80,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (email: string, password: string) => {
         try {
             const response = await axios.post('/api/auth/login', { email, password });
-            setUser(response.data);
+            // O backend retorna o usuário em response.data.user
+            if (response.data.user) {
+                setUser(response.data.user);
+            } else {
+                setUser(response.data);
+            }
             router.push('/itens'); 
         } catch (error) {
             throw new Error("Credenciais inválidas.");

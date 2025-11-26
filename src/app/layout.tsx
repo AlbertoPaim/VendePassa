@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import MenuDesktop from "@/components/ui/MenuDesktop";
+import '@/config/axios'; // Importar configuração global de axios
 
 const inter = Inter({ subsets: ["latin"] });
 

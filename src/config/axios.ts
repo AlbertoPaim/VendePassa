@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// Configurar axios para enviar cookies automaticamente
+axios.defaults.withCredentials = true;
+
 interface Image {
     id: string;
     imageUrl: string;
