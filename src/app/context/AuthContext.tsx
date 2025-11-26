@@ -3,12 +3,12 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import '@/config/axios'; // Importar configuração de axios
+import '@/config/axios';
 
 interface User {
     id: string;
     email: string;
-    roles: string[];
+    roles: (string | number)[];
 }
 
 interface AuthContextType {
@@ -33,8 +33,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const checkUserSession = async () => {
             try {
                 const response = await axios.get('/api/auth/me');
-                if (response.data.user) {
-                    setUser(response.data.user);
+                const rawUser = response.data.user || response.data;
+                if (rawUser) {
+                    // normalize roles to an array (backend can send numbers: 0=admin, 1=client)
+                    let roles: (string | number)[] = [];
+                    if (Array.isArray(rawUser.roles)) {
+                        roles = rawUser.roles;
+                    } else if (rawUser.role) {
+                        roles = Array.isArray(rawUser.role) ? rawUser.role : [rawUser.role];
+                    }
+                    const normalized = {
+                        id: rawUser.id,
+                        email: rawUser.email,
+                        roles: roles,
+                    };
+                    console.log('AuthContext - Normalized user:', normalized);
+                    setUser(normalized);
                 }
             } catch (error) {
                 console.log("Nenhuma sessão ativa encontrada.");
@@ -80,11 +94,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (email: string, password: string) => {
         try {
             const response = await axios.post('/api/auth/login', { email, password });
-            // O backend retorna o usuário em response.data.user
-            if (response.data.user) {
-                setUser(response.data.user);
-            } else {
-                setUser(response.data);
+            const rawUser = response.data.user || response.data;
+            if (rawUser) {
+                // normalize roles to an array (backend can send: enum strings "admin"/"client" or roles array)
+                let roles: (string | number)[] = [];
+                if (Array.isArray(rawUser.roles)) {
+                    roles = rawUser.roles;
+                } else if (rawUser.role) {
+                    roles = Array.isArray(rawUser.role) ? rawUser.role : [rawUser.role];
+                }
+                const normalized = {
+                    id: rawUser.id,
+                    email: rawUser.email,
+                    roles: roles,
+                };
+                const isAdmin = roles.includes('admin') || roles.includes('ROLE_ADMIN') || roles.includes(0);
+                console.log('===== USUÁRIO LOGADO =====');
+               
+                console.log('Email:', normalized.email);
+                console.log('Roles:', normalized.roles);
+    
+                setUser(normalized);
             }
             router.push('/itens'); 
         } catch (error) {

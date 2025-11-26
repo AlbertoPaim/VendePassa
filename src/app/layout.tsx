@@ -8,8 +8,8 @@ import '@/config/axios'; // Importar configuração global de axios
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Meu Bazar",
-  description: "Sistema de login completo",
+  title: "Vende e Passa",
+  description: "A melhor plataforma para comprar e vender itens",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex">
             <MenuDesktop />
-            <main className="flex-1">
+            <main className="flex-1 w-full lg:ml-0">
               {children}
             </main>
           </div>

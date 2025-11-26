@@ -20,25 +20,19 @@ export default function ForgotPasswordPage() {
         setIsSubmitting(true);
 
         try {
-            // Seu Controller espera o e-mail como uma string simples no corpo (Content-Type: text/plain).
-            // Chamamos o endpoint de recuperação de senha.
+            
             await axios.put('/auth/forgot-password', email, {
                 headers: {
-                    // É crucial especificar text/plain para que o Spring Boot receba o valor
                     'Content-Type': 'text/plain' 
                 }
             });
             
-            // Por segurança, a mensagem de sucesso é exibida mesmo que o e-mail não exista.
             setSuccess('Se o email estiver cadastrado, o link de redefinição foi enviado para sua caixa de entrada.');
 
         } catch (err: any) {
-            // Em caso de erro de conexão ou servidor, ainda exibimos a mensagem de sucesso por segurança.
             setSuccess('Se o email estiver cadastrado, o link de redefinição foi enviado para sua caixa de entrada.'); 
             
-            // Para debug, você pode descomentar o console.error:
-            // console.error("Erro ao solicitar redefinição:", err);
-            
+           
         } finally {
             setIsSubmitting(false);
         }

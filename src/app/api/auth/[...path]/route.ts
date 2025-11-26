@@ -29,7 +29,6 @@ async function handleLogin(req: NextRequest) {
 
         const nextResponse = NextResponse.json(response.data);
         
-        // Tenta extrair o cookie da resposta
         const setCookieHeaders = response.headers['set-cookie'];
         if (setCookieHeaders) {
             const cookies = Array.isArray(setCookieHeaders) ? setCookieHeaders : [setCookieHeaders];
