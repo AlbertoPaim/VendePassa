@@ -1,8 +1,7 @@
-"use client"
+'use client';
 
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,29 +19,20 @@ import {
 } from "@/components/ui/popover"
 
 const category = [
-    {
-        value: "CALCADOS",
-        label: "Calçados",
-    },
-    {
-        value: "ELETRONICOS",
-        label: "Eletrônicos",
-    },
-    {
-        value: "LIVROS",
-        label: "Livros",
-    },
-    {
-        value: "DECORACAO",
-        label: "Decoração",
-    },
-    {
-        value: "OUTROS",
-        label: "Outros",
-    },
+    { value: "ROUPAS", label: "Roupas" },
+    { value: "CALCADOS", label: "Calçados" },
+    { value: "ELETRONICOS", label: "Eletrônicos" },
+    { value: "LIVROS", label: "Livros" },
+    { value: "DECORACAO", label: "Decoração" },
+    { value: "OUTROS", label: "Outros" },
+    { value: "", label: "Remover Filtro" },
 ]
 
-export function Filtro() {
+interface FiltroProps {
+    onCategoryChange: (categoryValue: string) => void;
+}
+
+export function Filtro({ onCategoryChange }: FiltroProps) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
 
@@ -65,15 +55,19 @@ export function Filtro() {
                 <Command>
                     <CommandInput placeholder="Filtrar" className="h-9" />
                     <CommandList>
-                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
                         <CommandGroup>
                             {category.map((category) => (
                                 <CommandItem
                                     key={category.value}
                                     value={category.value}
                                     onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
+                                        const newValue = currentValue === value ? "" : currentValue;
+
+                                        setValue(newValue)
                                         setOpen(false)
+
+                                        onCategoryChange(newValue);
                                     }}
                                 >
                                     {category.label}
