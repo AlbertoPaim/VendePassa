@@ -19,40 +19,41 @@ axios.interceptors.response.use(
 );
 
 interface Image {
-    id: string;
-    imageUrl: string;
-    cloudinaryId: string;
+  id: string;
+  imageUrl: string;
+  cloudinaryId: string;
 }
 
 interface Item {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-    available: boolean;
-    images: Image[];
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  available: boolean;
+  images: Image[];
+  createdAt: string;
+  updatedAt: string;
 }
 
+
 export async function getItens(): Promise<Item[]> {
-    try {
-        const response = await axios.get('http://localhost:8080/itens');
-        return response.data;
-    } catch (error) {
-        console.error('Erro ao buscar os itens:', error);
-        return [];
-    }
+  try {
+    const response = await axios.get('http://localhost:8080/itens');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar os itens:', error);
+    return [];
+  }
 }
 
 export async function getItemById(id: string): Promise<Item | null> {
-    try {
-        const response = await axios.get(`http://localhost:8080/itens/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error(`Erro ao buscar o item com ID ${id}:`, error);
-        return null;
-    }
+  try {
+    const response = await axios.get(`http://localhost:8080/itens/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar o item com ID ${id}:`, error);
+    return null;
+  }
 }
 
