@@ -1,6 +1,7 @@
 import { getItens } from '@/config/axios';
 import { ItemGrid } from '@/components/ui/itemGrid';
 import Hero from '@/components/ui/Hero';
+import Tips from '@/components/ui/Tips';
 
 export default async function Home() {
   const itens = await getItens();
@@ -19,7 +20,11 @@ export default async function Home() {
       <p className=" text-[var(--azulEscuro)] text-xl text-secondary mb-2 text-center max-w-2xl">
         Descubra tesouros e dê uma nova vida a itens incríveis.
       </p>
+
+
       <ItemGrid items={itens} />
+
+      <Tips />
 
     </main>
   );

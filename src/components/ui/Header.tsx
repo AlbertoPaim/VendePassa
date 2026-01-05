@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export const Header = () => {
     return (
-        <header className="backdrop-blur-sm bg-[var(--azulEscuro)]  z-50 fixed inset-x-0 top-0 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200/50">
+        <header className=" bg-gradient-to-b bg-[var(--azulMedio)] backdrop-blur-sm bg-[var(--azulEscuro)]  z-50 fixed inset-x-0 top-0 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200/50">
             <Image src="/logo.png" width={150} height={50} alt="Vende Passa Logo" />
 
 
