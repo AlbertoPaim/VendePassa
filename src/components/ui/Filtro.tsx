@@ -43,7 +43,7 @@ export function Filtro({ onCategoryChange }: FiltroProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[300px] bg-white justify-between"
+                    className="w-[300px] bg-white/80 backdrop-blur-sm justify-between rounded-lg shadow-sm"
                 >
                     {value
                         ? category.find((category) => category.value === value)?.label

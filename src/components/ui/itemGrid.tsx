@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Filtro } from "./Filtro";
 import Image from "next/image";
-import { MdWhatsapp } from "react-icons/md";
+import { MdContentCopy, MdCopyAll, MdFileCopy, MdOutlineContentCopy, MdWhatsapp } from "react-icons/md";
 import { ItemProps } from "@/app/types/Item";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 
 import {
     Dialog,
@@ -103,6 +104,29 @@ export function ItemGrid({ items }: ItemGridProps) {
         return () => window.removeEventListener('popstate', onPop);
     }, [items]);
 
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    const handleCopyLink = (item: ItemProps) => {
+        if (typeof window === 'undefined') return;
+        const url = `${window.location.origin}/itens/${item.id}`;
+        navigator.clipboard.writeText(url).then(() => {
+            setCopiedId(item.id);
+            setTimeout(() => setCopiedId(null), 2000);
+        }).catch(() => {
+            setCopiedId(item.id);
+            setTimeout(() => setCopiedId(null), 2000);
+        });
+    }
+
+    const handleShareWhatsappLink = (item: ItemProps) => {
+        if (typeof window === 'undefined') return;
+        const url = `${window.location.origin}/itens/${item.id}`;
+        const message = `Confira este item: ${item.name} - ${url}`;
+        const encoded = encodeURIComponent(message);
+        const shareUrl = `https://wa.me/?text=${encoded}`;
+        window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    }
+
     return (
         <>
             <div className='w-full flex justify-end my-6'>
@@ -118,38 +142,40 @@ export function ItemGrid({ items }: ItemGridProps) {
 
                             <DialogTrigger asChild>
                                 <li
-                                    className="group flex flex-col bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 cursor-pointer"
+                                    className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:-translate-y-2 cursor-pointer border border-transparent hover:border-gray-100"
                                 >
                                     {item.images && item.images.length > 0 && (
-                                        <div className="relative w-full aspect-square overflow-hidden bg-gray-100">
+                                        <div className="relative w-full aspect-video overflow-hidden bg-gradient-to-tr from-gray-50 to-gray-100">
                                             <Image
                                                 src={item.images[0].imageUrl}
                                                 alt={`Foto de ${item.name}`}
                                                 fill
                                                 sizes="(max-width: 768px) 100vw, 33vw"
-                                                className="object-cover transition duration-500 group-hover:scale-105"
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
                                             />
+
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent pointer-events-none" />
                                         </div>
                                     )}
 
                                     <div className="flex-grow p-5 flex flex-col">
 
-                                        <h2 className="text-xl font-bold text-gray-800 mb-1">{item.name}</h2>
+                                        <h2 className="text-lg font-semibold text-gray-900 mb-1 truncate">{item.name}</h2>
 
                                         <div className="flex flex-col items-start mt-auto pt-3">
 
                                             <div className="flex justify-between items-center w-full mb-2">
                                                 <span
-                                                    className={`px-3 py-1 text-xs font-bold rounded-full whitespace-nowrap
+                                                    className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap
                         ${item.available
-                                                            ? 'bg-green-100 text-green-700 border border-green-300'
-                                                            : 'bg-red-100 text-red-700 border border-red-300'
+                                                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                                                            : 'bg-rose-100 text-rose-800 border border-rose-200'
                                                         }`}
                                                 >
                                                     {item.available ? 'Disponível' : 'Vendido'}
                                                 </span>
 
-                                                <p className="text-2xl font-extrabold text-primary">
+                                                <p className="text-xl font-extrabold bg-gradient-to-r from-yellow-400 to-pink-500 text-white px-3 py-1 rounded-full shadow-sm">
                                                     R$ {item.price.toFixed(2).replace('.', ',')}
                                                 </p>
                                             </div>
@@ -167,15 +193,40 @@ export function ItemGrid({ items }: ItemGridProps) {
                                 </DialogHeader>
 
                                 {item.images && item.images.length > 0 && (
-                                    <div className="relative w-full h-64 overflow-hidden bg-gray-100 rounded-md my-4">
-                                        <Image
-                                            src={item.images[0].imageUrl}
-                                            alt={`Foto de ${item.name}`}
-                                            fill
-                                            sizes="(max-width: 768px) 100vw, 50vw"
-                                            className="object-contain"
-                                        />
-                                    </div>
+                                    item.images.length > 1 ? (
+                                        <div className="relative w-full h-72 sm:h-96 rounded-lg my-4 overflow-hidden">
+                                            <Carousel>
+                                                <CarouselContent>
+                                                    {item.images.map((img, index) => (
+                                                        <CarouselItem key={index}>
+                                                            <div className="relative w-full h-72 sm:h-96 overflow-hidden bg-gray-50">
+                                                                <Image
+                                                                    src={img.imageUrl}
+                                                                    alt={`Foto ${index + 1} de ${item.name}`}
+                                                                    fill
+                                                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                                                    className="object-contain"
+                                                                />
+                                                            </div>
+                                                        </CarouselItem>
+                                                    ))}
+                                                </CarouselContent>
+
+                                                <CarouselPrevious />
+                                                <CarouselNext />
+                                            </Carousel>
+                                        </div>
+                                    ) : (
+                                        <div className="relative w-full h-72 sm:h-96 overflow-hidden bg-gray-50 rounded-lg my-4">
+                                            <Image
+                                                src={item.images[0].imageUrl}
+                                                alt={`Foto de ${item.name}`}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 50vw"
+                                                className="object-contain"
+                                            />
+                                        </div>
+                                    )
                                 )}
 
                                 <div className="flex items-center justify-between mt-2 mb-4">
@@ -183,18 +234,32 @@ export function ItemGrid({ items }: ItemGridProps) {
                                 </div>
 
                                 <DialogFooter>
-                                    <a
-                                        href={buildWhatsappUrl(item)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        aria-label={`Enviar WhatsApp sobre ${item.name}`}
-                                        title={`Enviar WhatsApp sobre ${item.name}`}
-                                        className="hover:bg-green-500 flex gap-4 items-center justify-center bg-green-400 px-4 py-2 rounded-lg"
-                                    >
-                                        <MdWhatsapp color='white' size={24} />
-                                        <span className='text-white font-bold'>{item.available ? 'Tenho interesse' : 'Tenho interesse'}</span>
-                                    </a>
-                                    <DialogClose className="ml-2 inline-flex items-center px-3 py-2 rounded-md text-sm text-gray-600 cursor-pointer">Fechar</DialogClose>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <a
+                                                href={buildWhatsappUrl(item)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                aria-label={`Enviar WhatsApp sobre ${item.name}`}
+                                                title={`Enviar WhatsApp sobre ${item.name}`}
+                                                className="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 rounded-lg shadow-md hover:from-green-600 hover:to-green-700"
+                                            >
+                                                <MdWhatsapp color='white' size={22} />
+                                                <span className='text-white font-semibold'>{item.available ? 'Tenho interesse' : 'Tenho interesse'}</span>
+                                            </a>
+
+                                            <button
+                                                onClick={() => handleShareWhatsappLink(item)}
+                                                type="button"
+                                                className="inline-flex items-center px-3 py-2 rounded-md text-sm bg-white border border-gray-200 text-gray-700 shadow-sm hover:bg-gray-50"
+                                                aria-label={`Compartilhar link do item ${item.name} por WhatsApp`}
+                                            >
+                                                Compartilhar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <DialogClose className="ml-3 inline-flex items-center px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100">Fechar</DialogClose>
                                 </DialogFooter>
 
                             </DialogContent>

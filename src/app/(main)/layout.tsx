@@ -13,6 +13,8 @@ export default function MainLayout({
       <main className="pt-20 ">
         {children}
       </main>
+
+      <Footer />
     </>
   );
-}
+} 
