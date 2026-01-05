@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Filtro } from "./Filtro";
 import Image from "next/image";
-import { MdContentCopy, MdCopyAll, MdFileCopy, MdOutlineContentCopy, MdShare, MdWhatsapp } from "react-icons/md";
+import { MdShare, MdWhatsapp } from "react-icons/md";
 import { ItemProps } from "@/app/types/Item";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 
@@ -36,17 +36,13 @@ export function ItemGrid({ items }: ItemGridProps) {
     });
 
     const buildWhatsappUrl = (item: ItemProps) => {
-        const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '';
+        const whatsappNumber = "+55 71 8602-0429";
+        const sanitized = whatsappNumber.replace(/[^+\d]/g, '');
         const price = `R$ ${item.price.toFixed(2).replace('.', ',')}`;
         const message = `Oi, tenho interesse no item "${item.name}" - ${price}. Podemos conversar?`;
-        const encoded = encodeURIComponent(message);
 
-        if (number && number.length > 0) {
-            const sanitized = number.replace(/[^+\d]/g, '');
-            return `https://api.whatsapp.com/send?phone=${sanitized}&text=${encoded}`;
-        }
 
-        return `https://wa.me/?text=${encoded}`;
+        return `https://wa.me/${sanitized}?text=${message}`;
     }
 
     const [openDialogId, setOpenDialogId] = useState<string | null>(null);
@@ -104,26 +100,12 @@ export function ItemGrid({ items }: ItemGridProps) {
         return () => window.removeEventListener('popstate', onPop);
     }, [items]);
 
-    const [copiedId, setCopiedId] = useState<string | null>(null);
-
-    const handleCopyLink = (item: ItemProps) => {
-        if (typeof window === 'undefined') return;
-        const url = `${window.location.origin}/itens/${item.id}`;
-        navigator.clipboard.writeText(url).then(() => {
-            setCopiedId(item.id);
-            setTimeout(() => setCopiedId(null), 2000);
-        }).catch(() => {
-            setCopiedId(item.id);
-            setTimeout(() => setCopiedId(null), 2000);
-        });
-    }
 
     const handleShareWhatsappLink = (item: ItemProps) => {
         if (typeof window === 'undefined') return;
         const url = `${window.location.origin}/itens/${item.id}`;
         const message = `Confira este item: ${item.name} - ${url}`;
-        const encoded = encodeURIComponent(message);
-        const shareUrl = `https://wa.me/?text=${encoded}`;
+        const shareUrl = `https://wa.me/?text=${message}`;
         window.open(shareUrl, '_blank', 'noopener,noreferrer');
     }
 
@@ -235,7 +217,7 @@ export function ItemGrid({ items }: ItemGridProps) {
 
                                 <DialogFooter>
                                     <div>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex justify-center items-center gap-2">
                                             <a
                                                 href={buildWhatsappUrl(item)}
                                                 target="_blank"
@@ -257,9 +239,9 @@ export function ItemGrid({ items }: ItemGridProps) {
                                                 <MdShare size={50} className="cursor-pointer "></MdShare>
                                             </button>
                                         </div>
+                                        <DialogClose className="mx-auto flex justify-center  ml-3  cursor-pointer items-center px-3 py-2 rounded-md text-md text-[var(--vermelhoVivido)] hover:bg-gray-100">Fechar</DialogClose>
                                     </div>
 
-                                    <DialogClose className="ml-3 inline-flex cursor-pointer items-center px-3 py-2 rounded-md text-md text-[var(--vermelhoVivido)] hover:bg-gray-100">Fechar</DialogClose>
                                 </DialogFooter>
 
                             </DialogContent>
