@@ -34,6 +34,20 @@ export function ItemGrid({ items }: ItemGridProps) {
         return item.category === selectedCategory;
     });
 
+    const buildWhatsappUrl = (item: ItemProps) => {
+        const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '';
+        const price = `R$ ${item.price.toFixed(2).replace('.', ',')}`;
+        const message = `Oi, tenho interesse no item "${item.name}" - ${price}. Podemos conversar?`;
+        const encoded = encodeURIComponent(message);
+
+        if (number && number.length > 0) {
+            const sanitized = number.replace(/[^+\d]/g, '');
+            return `https://api.whatsapp.com/send?phone=${sanitized}&text=${encoded}`;
+        }
+
+        return `https://wa.me/?text=${encoded}`;
+    }
+
     return (
         <>
             <div className='w-full flex justify-end my-6'>
@@ -114,9 +128,16 @@ export function ItemGrid({ items }: ItemGridProps) {
                                 </div>
 
                                 <DialogFooter>
-                                    <a href="/" className="hover:bg-green-500 flex gap-4 items-center justify-center bg-green-400 px-4 py-2 rounded-lg">
+                                    <a
+                                        href={buildWhatsappUrl(item)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`Enviar WhatsApp sobre ${item.name}`}
+                                        title={`Enviar WhatsApp sobre ${item.name}`}
+                                        className="hover:bg-green-500 flex gap-4 items-center justify-center bg-green-400 px-4 py-2 rounded-lg"
+                                    >
                                         <MdWhatsapp color='white' size={24} />
-                                        <span className='text-white font-bold'>{item.available ? 'Tenho interesse' : 'Item Indisponível'}</span>
+                                        <span className='text-white font-bold'>{item.available ? 'Tenho interesse' : 'Tenho interesse'}</span>
                                     </a>
                                     <DialogClose className="ml-2 inline-flex items-center px-3 py-2 rounded-md text-sm text-gray-600 cursor-pointer">Fechar</DialogClose>
                                 </DialogFooter>
