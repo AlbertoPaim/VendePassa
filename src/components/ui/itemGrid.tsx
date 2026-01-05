@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Filtro } from "./Filtro";
 import Image from "next/image";
 import { MdWhatsapp } from "react-icons/md";
@@ -48,6 +48,61 @@ export function ItemGrid({ items }: ItemGridProps) {
         return `https://wa.me/?text=${encoded}`;
     }
 
+    const [openDialogId, setOpenDialogId] = useState<string | null>(null);
+    const previousPathRef = useRef<string | null>(null);
+
+    const handleDialogOpenChange = (itemId: string, open: boolean) => {
+        if (typeof window === 'undefined') return;
+
+        if (open) {
+            if (!previousPathRef.current) {
+                previousPathRef.current = window.location.pathname + window.location.search;
+            }
+
+            if (window.location.pathname !== `/itens/${itemId}`) {
+                window.history.pushState({}, '', `/itens/${itemId}`);
+            }
+
+            setOpenDialogId(itemId);
+        } else {
+            const prev = previousPathRef.current ?? '/';
+            if (window.location.pathname === `/itens/${itemId}`) {
+                window.history.replaceState({}, '', prev);
+            }
+            previousPathRef.current = null;
+            setOpenDialogId(null);
+        }
+    }
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const matchOnLoad = window.location.pathname.match(/^\/itens\/([^/]+)/);
+        if (matchOnLoad) {
+            const id = matchOnLoad[1];
+            if (items.find(i => i.id === id)) {
+                setOpenDialogId(id);
+            }
+        }
+
+        const onPop = () => {
+            const m = window.location.pathname.match(/^\/itens\/([^/]+)/);
+            if (m) {
+                const id = m[1];
+                if (items.find(i => i.id === id)) {
+                    setOpenDialogId(id);
+                } else {
+                    setOpenDialogId(null);
+                }
+            } else {
+                setOpenDialogId(null);
+            }
+        };
+
+        window.addEventListener('popstate', onPop);
+        return () => window.removeEventListener('popstate', onPop);
+    }, [items]);
+
     return (
         <>
             <div className='w-full flex justify-end my-6'>
@@ -59,7 +114,7 @@ export function ItemGrid({ items }: ItemGridProps) {
 
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full mb-16">
                     {filteredItems.filter(item => item.images.length > 0).map((item) => (
-                        <Dialog key={item.id}>
+                        <Dialog key={item.id} open={openDialogId === item.id} onOpenChange={(open) => handleDialogOpenChange(item.id, open)}>
 
                             <DialogTrigger asChild>
                                 <li

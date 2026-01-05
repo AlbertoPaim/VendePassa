@@ -1,5 +1,6 @@
 
-import React from 'react';
+import { getItens } from '@/config/axios';
+import { ItemGrid } from '@/components/ui/itemGrid';
 
 interface PageProps {
 	params: {
@@ -7,14 +8,20 @@ interface PageProps {
 	};
 }
 
-export default function ItemPage({ params }: PageProps) {
-	const { id } = params;
+export default async function ItemPage({ params }: PageProps) {
+	const itens = await getItens();
 
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-bold">Detalhes do Item</h1>
-			<p className="mt-4">ID do item: {id}</p>
-			<p className="mt-2 text-sm text-text-secondary">Conteúdo de detalhe placeholder — implemente busca do backend quando precisar.</p>
-		</div>
+		<main className="max-w-[1200px] w-full flex flex-col items-center mx-auto px-4">
+			<h1 className="text-4xl font-extrabold tracking-tight mb-4 text-primary font-heading text-center">
+				Vende Passa
+			</h1>
+			<p className="text-lg text-secondary mb-2 text-center max-w-2xl">
+				Descubra tesouros e dê uma nova vida a itens incríveis.
+			</p>
+
+			<ItemGrid items={itens} />
+
+		</main>
 	);
 }
