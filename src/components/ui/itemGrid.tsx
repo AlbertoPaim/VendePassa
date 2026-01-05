@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Filtro } from "./Filtro";
 import Image from "next/image";
-import { MdContentCopy, MdCopyAll, MdFileCopy, MdOutlineContentCopy, MdWhatsapp } from "react-icons/md";
+import { MdContentCopy, MdCopyAll, MdFileCopy, MdOutlineContentCopy, MdShare, MdWhatsapp } from "react-icons/md";
 import { ItemProps } from "@/app/types/Item";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 
@@ -142,7 +142,7 @@ export function ItemGrid({ items }: ItemGridProps) {
 
                             <DialogTrigger asChild>
                                 <li
-                                    className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:-translate-y-2 cursor-pointer border border-transparent hover:border-gray-100"
+                                    className="group flex flex-col bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-2 hover:scale-[1.02] cursor-pointer border border-white/20 hover:border-white/40"
                                 >
                                     {item.images && item.images.length > 0 && (
                                         <div className="relative w-full aspect-video overflow-hidden bg-gradient-to-tr from-gray-50 to-gray-100">
@@ -160,7 +160,7 @@ export function ItemGrid({ items }: ItemGridProps) {
 
                                     <div className="flex-grow p-5 flex flex-col">
 
-                                        <h2 className="text-lg font-semibold text-gray-900 mb-1 truncate">{item.name}</h2>
+                                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate tracking-tight">{item.name}</h2>
 
                                         <div className="flex flex-col items-start mt-auto pt-3">
 
@@ -175,7 +175,7 @@ export function ItemGrid({ items }: ItemGridProps) {
                                                     {item.available ? 'Disponível' : 'Vendido'}
                                                 </span>
 
-                                                <p className="text-xl font-extrabold bg-gradient-to-r from-yellow-400 to-pink-500 text-white px-3 py-1 rounded-full shadow-sm">
+                                                <p className="text-xl font-extrabold bg-[var(--vermelhoVivido)] text-white px-3 py-1 rounded-full shadow-md ring-1 ring-white/10">
                                                     R$ {item.price.toFixed(2).replace('.', ',')}
                                                 </p>
                                             </div>
@@ -244,7 +244,7 @@ export function ItemGrid({ items }: ItemGridProps) {
                                                 title={`Enviar WhatsApp sobre ${item.name}`}
                                                 className="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 rounded-lg shadow-md hover:from-green-600 hover:to-green-700"
                                             >
-                                                <MdWhatsapp color='white' size={22} />
+                                                <MdWhatsapp color='white' size={50} />
                                                 <span className='text-white font-semibold'>{item.available ? 'Tenho interesse' : 'Tenho interesse'}</span>
                                             </a>
 
@@ -254,12 +254,12 @@ export function ItemGrid({ items }: ItemGridProps) {
                                                 className="inline-flex items-center px-3 py-2 rounded-md text-sm bg-white border border-gray-200 text-gray-700 shadow-sm hover:bg-gray-50"
                                                 aria-label={`Compartilhar link do item ${item.name} por WhatsApp`}
                                             >
-                                                Compartilhar
+                                                <MdShare size={50} className="cursor-pointer "></MdShare>
                                             </button>
                                         </div>
                                     </div>
 
-                                    <DialogClose className="ml-3 inline-flex items-center px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100">Fechar</DialogClose>
+                                    <DialogClose className="ml-3 inline-flex cursor-pointer items-center px-3 py-2 rounded-md text-md text-[var(--vermelhoVivido)] hover:bg-gray-100">Fechar</DialogClose>
                                 </DialogFooter>
 
                             </DialogContent>

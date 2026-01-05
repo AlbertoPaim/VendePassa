@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { MdWhatsapp, MdEmail } from "react-icons/md";
 
 export const Footer = () => {
@@ -6,12 +7,12 @@ export const Footer = () => {
     const whatsappUrl = sanitized ? `https://api.whatsapp.com/send?phone=${sanitized}` : `https://wa.me/`;
 
     return (
-        <footer className="w-full bg-white shadow-inner border-t mt-12">
+        <footer className="w-full bg-[var(--azulEscuro)] shadow-inner border-t mt-12">
             <div className="max-w-6xl mx-auto px-6 py-8">
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
-                    <div className="text-center md:text-left">
-                        <h3 className="text-lg font-bold">Vende e Passa</h3>
-                        <p className="text-sm text-gray-600 mt-1">Ajudamos você a encontrar ótimas oportunidades e vender com facilidade.</p>
+                    <div className="mx-auto  gap-4 flex flex-col items-center md:text-left">
+                        <Image src="/logo.png" width={150} height={50} alt="Vende Passa Logo" />
+                        <p className="text-sm text-[var(--laranjaClaro)] mt-1">Ajudamos você a encontrar ótimas oportunidades e vender com facilidade.</p>
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -29,13 +30,13 @@ export const Footer = () => {
                             href="mailto:contato@vendeepassa.com"
                             className="inline-flex items-center gap-2 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-50"
                         >
-                            <MdEmail size={20} />
-                            <span>contato@vendeepassa.com</span>
+                            <MdEmail color="white" size={20} />
+                            <span className="text-[var(--laranjaClaro)]">contato@vendeepassa.com</span>
                         </a>
                     </div>
                 </div>
 
-                <div className="mt-6 text-center text-xs text-gray-500">
+                <div className="text-[var(--laranjaClaro)] mt-6 text-center text-xs ">
                     &copy; {new Date().getFullYear()} Vende e Passa. Todos os direitos reservados.
                 </div>
             </div>
