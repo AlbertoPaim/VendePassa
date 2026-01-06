@@ -10,7 +10,7 @@ export default async function Home() {
   return (
     <main className="max-w-[1200px] w-full flex flex-col items-center mx-auto px-4">
 
-      <h1 className="mt-10 text-[var(--azulEscuro)] text-4xl font-extrabold tracking-tight mb-4 font-heading text-center">
+      <h1 className="mt-10 text-(--azulEscuro) text-4xl font-extrabold tracking-tight mb-4 font-heading text-center">
         Vende Passa
       </h1>
 
