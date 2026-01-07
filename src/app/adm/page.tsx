@@ -80,10 +80,47 @@ export default function Dashboard() {
         }
     };
 
-    const handleUpdate = async (data: any) => {
-        console.log("update");
+    const handleUpdate = async (data: any, images?: File[]) => {
+        try {
+            const formData = new FormData();
+            const removedImageIds = data.removedImageIds || [];
 
-    }
+
+            if (images && images.length > 0) {
+                images.forEach((file) => formData.append("images", file));
+            } else {
+
+                formData.append("images", new Blob([], { type: "image/jpeg" }));
+            }
+
+            const itemBlob = new Blob(
+                [JSON.stringify({
+                    id: data.id,
+                    name: data.name,
+                    description: data.description,
+                    price: parseFloat(data.price),
+                    category: data.category,
+                    available: data.available,
+                    removedImageIds,
+                })],
+                { type: "application/json" }
+            );
+
+            formData.append("item", itemBlob);
+
+            await api.put(`/itens/${data.id}`, formData, {
+                withCredentials: true,
+            });
+
+            alert("Item atualizado com sucesso!");
+            setEditOpen(false);
+            setEditingItem(null);
+            fetchItems();
+        } catch (err: any) {
+            console.error("Erro na atualização:", err.response?.data || err.message);
+            alert("Erro ao atualizar. Verifique os dados.");
+        }
+    };
 
     const handleDelete = async (id: string) => {
         if (!confirm("Tem certeza que deseja deletar este item?")) return;
