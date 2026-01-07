@@ -23,6 +23,15 @@ export default function Dashboard() {
     const [editOpen, setEditOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<any | null>(null);
 
+    type Toast = { id: string; message: string; type?: 'success' | 'error' | 'info' };
+    const [toasts, setToasts] = useState<Toast[]>([]);
+    const addToast = (message: string, type: Toast['type'] = 'success') => {
+        const id = Date.now().toString();
+        setToasts(prev => [...prev, { id, message, type }]);
+        window.setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
+    };
+    const removeToast = (id: string) => setToasts(prev => prev.filter(t => t.id !== id));
+
     const fetchItems = async () => {
         setLoading(true);
         try {
@@ -64,7 +73,7 @@ export default function Dashboard() {
                 withCredentials: true,
             });
 
-            alert("Item criado com sucesso!");
+            addToast("Item criado com sucesso!", 'success');
             setOpen(false);
             fetchItems();
 
@@ -73,9 +82,9 @@ export default function Dashboard() {
             const status = err.response?.status;
 
             if (status === 403) {
-                alert("Sessão expirada ou sem permissão. Tente fazer login novamente.");
+                addToast("Sessão expirada ou sem permissão. Tente fazer login novamente.", 'error');
             } else {
-                alert("Erro ao criar item. Verifique os campos ou sua conexão.");
+                addToast("Erro ao criar item. Verifique os campos ou sua conexão.", 'error');
             }
         }
     };
@@ -105,11 +114,18 @@ export default function Dashboard() {
 
             await api.put(`/itens/${data.id}`, formData, { withCredentials: true });
 
-            alert("Atualizado!");
+            addToast("Item atualizado com sucesso!", 'success');
             setEditOpen(false);
+            setEditingItem(null);
             fetchItems();
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
+            const status = err.response?.status;
+            if (status === 403) {
+                addToast("Sessão expirada ou sem permissão. Tente fazer login novamente.", 'error');
+            } else {
+                addToast("Erro ao atualizar item. Verifique os campos ou sua conexão.", 'error');
+            }
         }
     };
     const handleDelete = async (id: string) => {
@@ -122,7 +138,7 @@ export default function Dashboard() {
                 withCredentials: true,
             });
 
-            alert("Item deletado com sucesso!");
+            addToast("Item deletado com sucesso!", 'success');
             fetchItems();
         } catch (err: any) {
             console.error("Erro ao deletar item:", err);
@@ -213,6 +229,16 @@ export default function Dashboard() {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
+
+                {/* Toast container */}
+                <div className="fixed top-4 right-4 flex flex-col gap-2 z-50">
+                    {toasts.map(t => (
+                        <div key={t.id} className={`max-w-sm w-full px-4 py-2 rounded shadow flex items-center justify-between gap-4 ${t.type === 'success' ? 'bg-green-500 text-white' : t.type === 'error' ? 'bg-red-500 text-white' : 'bg-gray-800 text-white'}`}>
+                            <div className="text-sm">{t.message}</div>
+                            <button onClick={() => removeToast(t.id)} className="font-bold">✕</button>
+                        </div>
+                    ))}
+                </div>
 
             </div>
         </main>
